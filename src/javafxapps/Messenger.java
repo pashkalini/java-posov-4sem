@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.List;
-
+// комментарий для проверки git
 
 public class Messenger extends Application {
     @Override
