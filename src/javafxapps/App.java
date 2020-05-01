@@ -1,5 +1,5 @@
 package javafxapps;
-// комментарий для тестирования 
+// комментарий для тестирования
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+// комментарий
 public class App extends Application {
     @Override
     public void start(Stage mainStage) {
