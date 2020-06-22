@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-
+// решение задачи по цветам
 public class Drawing extends Application {
     public void start(Stage mainStage) throws FileNotFoundException {
         Scene scene = new Scene(initInterface(), 360, 512);
