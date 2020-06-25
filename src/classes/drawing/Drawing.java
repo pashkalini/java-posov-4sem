@@ -10,7 +10,7 @@ public class Drawing implements Printable {
     public Drawing(int h, int w, char s) {
         // количество строк
         // количество столбцов
-        //симавол, которым изначально всё заполнить
+        //символ, которым изначально всё заполнить
         this.draw = new char[h][w];
         for (char[] chars : draw) {
             Arrays.fill(chars, s);
