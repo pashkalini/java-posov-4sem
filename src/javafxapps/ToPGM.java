@@ -11,16 +11,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-//import javax.*;
 import javax.imageio.ImageIO;
-import java.awt.image.RenderedImage;
+
 import javafx.embed.swing.SwingFXUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -40,22 +38,18 @@ public class ToPGM extends Application {
         Button b2 = new Button("Choose image from PGM");
         FileChooser fileChooser = new FileChooser();
         ImageView iv1 = new ImageView();
-        ImageView iv2 = new ImageView();
 
         b1.setOnAction(e -> {
             File chosenImage = fileChooser.showOpenDialog(mainStage);
             saveAsPGM(chosenImage);
             iv1.setImage(saveAsPGM(chosenImage));
             vb.getChildren().addAll(new Label(getImageName(chosenImage)), iv1);
-
         });
 
         b2.setOnAction(e -> {
             File chosenImage = fileChooser.showOpenDialog(mainStage);
             saveAsPNG(chosenImage);
-            //iv2.setImage(saveAsPNG(chosenImage));
             vb.getChildren().addAll(new Label(getImageName(chosenImage)));
-
         });
 
         vb.getChildren().addAll(b1, b2);
@@ -90,7 +84,6 @@ public class ToPGM extends Application {
                                     ) * 255)
                     );
             newPGM.saveTo(getImageName(chosenImage) + ".pgm");
-
             return image;
         } catch (Exception fileNotFoundException) {
             fileNotFoundException.printStackTrace();
@@ -98,28 +91,27 @@ public class ToPGM extends Application {
         }
     }
 
-    private void saveAsPNG (File chosenImage) {
+    private void saveAsPNG(File chosenImage) {  // сохраняем картинку из PGM в PNG
         try {
             Path imagePath = Path.of(String.valueOf(chosenImage));
             Scanner scan = new Scanner(imagePath, StandardCharsets.UTF_8);
             scan.next(); // пропускаем P2
-            int width = Integer.parseInt(scan.next());
-            int height = Integer.parseInt(scan.next());
-            int maxValue = Integer.parseInt(scan.next());
+            int width = Integer.parseInt(scan.next()); // считываем длину картинки
+            int height = Integer.parseInt(scan.next()); // считываем высоту картинки
+            int maxValue = Integer.parseInt(scan.next()); // считываем максимальное значение цвета
 
             WritableImage wi = new WritableImage(width, height);
             PixelWriter pw = wi.getPixelWriter();
 
-            for (int i = 0; i < height; i++) {
+            for (int i = 0; i < height; i++) { //  задаём цвет нового изображения
                 for (int j = 0; j < width; j++) {
                     pw.setColor(j, i,
-                            Color.gray((double)Integer.parseInt(scan.next()) / maxValue));
+                            Color.gray((double) Integer.parseInt(scan.next()) / maxValue));
                 }
             }
 
-            File outputFile = new File("newpng.png");
+            File outputFile = new File("PNGfromPMG.png");
             BufferedImage bImage = SwingFXUtils.fromFXImage(wi, null);
-
             ImageIO.write(bImage, "png", outputFile);
 
         } catch (Exception e) {
