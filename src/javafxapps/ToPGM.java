@@ -11,9 +11,19 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+//import javax.*;
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+import javafx.embed.swing.SwingFXUtils;
+
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Scanner;
 
 public class ToPGM extends Application {
     private Window mainStage;
@@ -26,19 +36,29 @@ public class ToPGM extends Application {
 
     private VBox initInterface() throws FileNotFoundException {
         VBox vb = new VBox();
-        Button b = new Button("Choose image");
+        Button b1 = new Button("Choose image to PGM");
+        Button b2 = new Button("Choose image from PGM");
         FileChooser fileChooser = new FileChooser();
-        ImageView iv = new ImageView();
+        ImageView iv1 = new ImageView();
+        ImageView iv2 = new ImageView();
 
-        b.setOnAction(e -> {
+        b1.setOnAction(e -> {
             File chosenImage = fileChooser.showOpenDialog(mainStage);
             saveAsPGM(chosenImage);
-            iv.setImage(saveAsPGM(chosenImage));
-            vb.getChildren().addAll(new Label(getImageName(chosenImage)), iv);
+            iv1.setImage(saveAsPGM(chosenImage));
+            vb.getChildren().addAll(new Label(getImageName(chosenImage)), iv1);
 
         });
 
-        vb.getChildren().addAll(b);
+        b2.setOnAction(e -> {
+            File chosenImage = fileChooser.showOpenDialog(mainStage);
+            saveAsPNG(chosenImage);
+            //iv2.setImage(saveAsPNG(chosenImage));
+            vb.getChildren().addAll(new Label(getImageName(chosenImage)));
+
+        });
+
+        vb.getChildren().addAll(b1, b2);
         return vb;
     }
 
@@ -77,5 +97,35 @@ public class ToPGM extends Application {
             return null;
         }
     }
+
+    private void saveAsPNG (File chosenImage) {
+        try {
+            Path imagePath = Path.of(String.valueOf(chosenImage));
+            Scanner scan = new Scanner(imagePath, StandardCharsets.UTF_8);
+            scan.next(); // пропускаем P2
+            int width = Integer.parseInt(scan.next());
+            int height = Integer.parseInt(scan.next());
+            int maxValue = Integer.parseInt(scan.next());
+
+            WritableImage wi = new WritableImage(width, height);
+            PixelWriter pw = wi.getPixelWriter();
+
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    pw.setColor(j, i,
+                            Color.gray((double)Integer.parseInt(scan.next()) / maxValue));
+                }
+            }
+
+            File outputFile = new File("newpng.png");
+            BufferedImage bImage = SwingFXUtils.fromFXImage(wi, null);
+
+            ImageIO.write(bImage, "png", outputFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
